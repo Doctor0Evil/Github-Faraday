@@ -1,0 +1,65 @@
+name: Build openEMS full image (manual)
+
+# NOTE: This workflow performs a long, resource-intensive build and MUST be
+# run only manually via the GitHub UI (workflow_dispatch) or via an orchestration
+# that targets a self-hosted builder. Do NOT run this on GitHub-hosted runners.
+# Ensure the runner label 'builder' maps to machines with sufficient CPU/RAM and
+# Docker enabled before triggering this workflow.
+
+on:
+  workflow_dispatch:
+    inputs:
+      proceed:
+        description: 'Type YES to confirm you want to run this long build'
+        required: true
+        default: 'NO'
+
+permissions:
+  contents: read
+
+jobs:
+  build-full-image:
+    name: Build full openEMS image (self-hosted builder)
+    runs-on: [self-hosted, builder]
+    if: github.event.inputs.proceed == 'YES'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build openEMS image (long-running) and capture docker build logs
+        run: |
+          mkdir -p openems/artifacts
+          set -o pipefail
+          docker build -f openems/Dockerfile.openems -t xr-openems-full:latest . 2>&1 | tee openems/artifacts/docker_build.log
+          build_exit=$?
+          if [ "$build_exit" -ne 0 ]; then
+            echo "Docker build failed with exit code $build_exit. See openems/artifacts/docker_build.log";
+            exit $build_exit;
+          fi
+
+      - name: Run acceptance test inside built container and capture outputs
+        run: |
+          mkdir -p openems/artifacts
+          # Run acceptance test and capture stdout/stderr
+          docker run --rm -v "${{ github.workspace }}:/work" xr-openems-full:latest /work/openems/acceptance_test.sh > openems/artifacts/acceptance_test.log 2>&1 || true
+          # Capture exit code
+          echo "$?" > openems/artifacts/acceptance_test.exit
+          # Also capture any JSON or other outputs produced under /work/openems
+          ls -la openems || true
+
+      - name: Upload acceptance artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: openems-acceptance
+          path: openems/artifacts/**
+
+      - name: Fail if acceptance test failed
+        run: |
+          exitcode=$(cat openems/artifacts/acceptance_test.exit || echo 1)
+          if [ "$exitcode" -ne 0 ]; then
+            echo "Acceptance test failed with exit code: $exitcode";
+            echo "See uploaded artifact 'openems-acceptance' for logs.";
+            exit $exitcode;
+          else
+            echo "Acceptance test passed (exit 0)";
+          fi

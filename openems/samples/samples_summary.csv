@@ -1,0 +1,3 @@
+device,freq_mhz,json,csv,generated_at
+oculus-quest-2,2400,openems/samples/oculus-quest-2_2400MHz_results.json,openems/samples/oculus-quest-2_2400MHz_results.csv,2025-12-21T00:00:00Z
+pico-neo-3,5000,openems/samples/pico-neo-3_5000MHz_results.json,openems/samples/pico-neo-3_5000MHz_results.csv,2025-12-21T00:00:00Z

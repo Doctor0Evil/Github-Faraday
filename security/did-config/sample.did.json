@@ -1,0 +1,19 @@
+{
+  "@context": "https://www.w3.org/ns/did/v1",
+  "id": "did:ion:EiD8J2b3K8k9Q8x9L7m2n4p1q5r6s7t8u9v0w1x2y3z4A5B6C7D8E9F0",
+  "verificationMethod": [
+    {
+      "id": "#key-1",
+      "type": "EcdsaSecp256k1VerificationKey2019",
+      "controller": "did:ion:EiD8J2b3K8k9Q8x9L7m2n4p1q5r6s7t8u9v0w1x2y3z4A5B6C7D8E9F0",
+      "publicKeyJwk": {
+        "kty": "EC",
+        "crv": "secp256k1",
+        "x": "(placeholder)",
+        "y": "(placeholder)"
+      }
+    }
+  ],
+  "authentication": ["#key-1"],
+  "note": "This is an example DID document. Do NOT store private keys here. Replace placeholders with your real public key info when publishing a real DID document."
+}

@@ -1,0 +1,14 @@
+{
+  "mode": "placeholder",
+  "frequency_ghz": 2.4,
+  "timestamp": "2025-12-21T00:00:00Z",
+  "note": "Sample placeholder report for Oculus Quest 2 @ 2.4 GHz",
+  "box_dims_m": [0.3, 0.3, 0.2],
+  "sweep": [
+    { "freq_mhz": 2300.0, "attenuation_db": -22.5 },
+    { "freq_mhz": 2350.0, "attenuation_db": -36.2 },
+    { "freq_mhz": 2400.0, "attenuation_db": -60.0 },
+    { "freq_mhz": 2450.0, "attenuation_db": -35.8 },
+    { "freq_mhz": 2500.0, "attenuation_db": -20.1 }
+  ]
+}

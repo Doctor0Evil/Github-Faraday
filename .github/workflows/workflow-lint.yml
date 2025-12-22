@@ -1,0 +1,24 @@
+name: Workflow Lint
+
+on:
+  - push
+  - pull_request
+  - workflow_dispatch
+
+permissions:
+  contents: read
+
+env:
+  # Example DID identity (set in repo/org variables in production)
+  DID_IDENTITY: "did:ion:EiD8J2b3K8k9Q8x9L7m2n4p1q5r6s7t8u9v0w1x2y3z4A5B6C7D8E9F0"
+
+jobs:
+  lint-workflows:
+    name: Lint workflows
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run workflow linter
+        run: bash scripts/lint-workflows.sh
